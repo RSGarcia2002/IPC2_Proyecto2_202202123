@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<listadoInicial>
+  <configInicial id="CI1" idEmpresa="E1" idPunto="P1">
+    <escritoriosActivos>
+      <escritorio idEscritorio="ES1"/>
+      <escritorio idEscritorio="ES2"/>
+    </escritoriosActivos>
+    <listadoClientes>
+      <cliente dpi="1000000000001">
+        <nombre>Ana López</nombre>
+        <listadoTransacciones>
+          <transaccion idTransaccion="T1" cantidad="1"/>
+        </listadoTransacciones>
+      </cliente>
+      <cliente dpi="1000000000002">
+        <nombre>Mario Ruiz</nombre>
+        <listadoTransacciones>
+          <transaccion idTransaccion="T2" cantidad="2"/>
+        </listadoTransacciones>
+      </cliente>
+      <cliente dpi="1000000000003">
+        <nombre>Sofía Ramos</nombre>
+        <listadoTransacciones>
+          <transaccion idTransaccion="T3" cantidad="3"/>
+        </listadoTransacciones>
+      </cliente>
+      <cliente dpi="1000000000004">
+        <nombre>Kevin Hernández</nombre>
+        <listadoTransacciones>
+          <transaccion idTransaccion="T1" cantidad="1"/>
+          <transaccion idTransaccion="T3" cantidad="1"/>
+        </listadoTransacciones>
+      </cliente>
+      <cliente dpi="1000000000005">
+        <nombre>Laura Méndez</nombre>
+        <listadoTransacciones>
+          <transaccion idTransaccion="T2" cantidad="1"/>
+        </listadoTransacciones>
+      </cliente>
+      <cliente dpi="1000000000006">
+        <nombre>Esteban Díaz</nombre>
+        <listadoTransacciones>
+          <transaccion idTransaccion="T1" cantidad="2"/>
+        </listadoTransacciones>
+      </cliente>
+    </listadoClientes>
+  </configInicial>
+</listadoInicial>

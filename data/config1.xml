@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<listaEmpresas>
+  <empresa id="E1">
+    <nombre>Mi Empresa</nombre>
+    <abreviatura>ME</abreviatura>
+    <listaPuntosAtencion>
+      <puntoAtencion id="P1">
+        <nombre>Agencia Zona 1</nombre>
+        <direccion>6a Avenida 10-20, Zona 1</direccion>
+        <listaEscritorios>
+          <escritorio id="ES1">
+            <identificacion>ESCR-01</identificacion>
+            <encargado>Juan Pérez</encargado>
+          </escritorio>
+          <escritorio id="ES2">
+            <identificacion>ESCR-02</identificacion>
+            <encargado>María López</encargado>
+          </escritorio>
+        </listaEscritorios>
+      </puntoAtencion>
+    </listaPuntosAtencion>
+    <listaTransacciones>
+      <transaccion id="T1">
+        <nombre>Apertura de cuenta</nombre>
+        <tiempoAtencion>5</tiempoAtencion>
+      </transaccion>
+      <transaccion id="T2">
+        <nombre>Consulta de saldo</nombre>
+        <tiempoAtencion>2</tiempoAtencion>
+      </transaccion>
+    </listaTransacciones>
+  </empresa>
+</listaEmpresas>
