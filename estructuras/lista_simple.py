@@ -57,3 +57,8 @@ class ListaSimple:
 
     def tamano(self):
         return self._size
+    
+    def vaciar(self):
+        self.primero = None
+        self._tamano = 0
+

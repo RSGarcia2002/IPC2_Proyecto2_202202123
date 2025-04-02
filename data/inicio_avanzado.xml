@@ -1,48 +1,67 @@
 <?xml version="1.0"?>
 <listadoInicial>
-  <configInicial id="CI1" idEmpresa="E1" idPunto="P1">
+  <configInicial id="CFG1" idEmpresa="EMP1" idPunto="PA1">
+
     <escritoriosActivos>
-      <escritorio idEscritorio="ES1"/>
-      <escritorio idEscritorio="ES2"/>
+      <escritorio idEscritorio="E1"/>
+      <escritorio idEscritorio="E2"/>
     </escritoriosActivos>
+
     <listadoClientes>
-      <cliente dpi="1000000000001">
-        <nombre>Ana López</nombre>
+      <cliente dpi="1234567890101">
+        <nombre>Mario López</nombre>
         <listadoTransacciones>
           <transaccion idTransaccion="T1" cantidad="1"/>
+          <transaccion idTransaccion="T2" cantidad="1"/>
         </listadoTransacciones>
       </cliente>
-      <cliente dpi="1000000000002">
-        <nombre>Mario Ruiz</nombre>
+
+      <cliente dpi="2345678901212">
+        <nombre>Andrea García</nombre>
         <listadoTransacciones>
           <transaccion idTransaccion="T2" cantidad="2"/>
         </listadoTransacciones>
       </cliente>
-      <cliente dpi="1000000000003">
-        <nombre>Sofía Ramos</nombre>
-        <listadoTransacciones>
-          <transaccion idTransaccion="T3" cantidad="3"/>
-        </listadoTransacciones>
-      </cliente>
-      <cliente dpi="1000000000004">
-        <nombre>Kevin Hernández</nombre>
+
+      <cliente dpi="3456789012323">
+        <nombre>Carlos Pérez</nombre>
         <listadoTransacciones>
           <transaccion idTransaccion="T1" cantidad="1"/>
           <transaccion idTransaccion="T3" cantidad="1"/>
         </listadoTransacciones>
       </cliente>
-      <cliente dpi="1000000000005">
-        <nombre>Laura Méndez</nombre>
+
+      <cliente dpi="4567890123434">
+        <nombre>Lucía Hernández</nombre>
         <listadoTransacciones>
+          <transaccion idTransaccion="T3" cantidad="3"/>
+        </listadoTransacciones>
+      </cliente>
+
+      <cliente dpi="5678901234545">
+        <nombre>David Morales</nombre>
+        <listadoTransacciones>
+          <transaccion idTransaccion="T1" cantidad="1"/>
           <transaccion idTransaccion="T2" cantidad="1"/>
+          <transaccion idTransaccion="T3" cantidad="1"/>
         </listadoTransacciones>
       </cliente>
-      <cliente dpi="1000000000006">
-        <nombre>Esteban Díaz</nombre>
+
+      <cliente dpi="6789012345656">
+        <nombre>Silvia Ramírez</nombre>
         <listadoTransacciones>
-          <transaccion idTransaccion="T1" cantidad="2"/>
+          <transaccion idTransaccion="T2" cantidad="2"/>
+          <transaccion idTransaccion="T3" cantidad="1"/>
         </listadoTransacciones>
       </cliente>
+
+      <cliente dpi="7890123456767">
+        <nombre>Fernando Ruiz</nombre>
+        <listadoTransacciones>
+          <transaccion idTransaccion="T3" cantidad="2"/>
+        </listadoTransacciones>
+      </cliente>
+
     </listadoClientes>
   </configInicial>
 </listadoInicial>

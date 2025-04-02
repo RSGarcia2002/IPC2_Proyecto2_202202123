@@ -1,5 +1,3 @@
-# modelos/punto_atencion.py
-
 from estructuras.lista_doble import ListaDoble
 from estructuras.cola import Cola
 from estructuras.lista_simple import ListaSimple
@@ -21,25 +19,42 @@ class PuntoAtencion:
         self.cola_espera.encolar(cliente)
 
     def atender(self):
+        print("\n📋 COLA ACTUAL:")
+        temp = self.cola_espera.frente
+        pos = 1
+        while temp:
+            c = temp.dato
+            print(f"{pos}. {c.nombre} (DPI: {c.dpi})")
+            temp = temp.siguiente
+            pos += 1
+
+        atendidos_ahora = 0
+
         for escritorio in self.escritorios.recorrer_adelante():
             if not escritorio.activo:
                 continue
 
-            # Si no tiene cliente asignado y hay clientes esperando
+            # Asignar cliente si está libre
             if escritorio.cliente_actual is None and not self.cola_espera.esta_vacia():
                 cliente = self.cola_espera.desencolar()
-                cliente.tiempo_espera = 0  # Inicialmente en 0
+                cliente.tiempo_espera = 0
                 escritorio.asignar_cliente(cliente)
 
-            # Atender si tiene cliente
+            # Atender cliente
             if escritorio.cliente_actual:
                 escritorio.atender()
 
-                # Si terminó de atender, guardar estadísticas
                 if escritorio.cliente_actual is None and escritorio.ultimo_cliente:
                     cliente = escritorio.ultimo_cliente
                     cliente.tiempo_total = escritorio.ultimo_tiempo
                     self.clientes_atendidos.agregar(cliente)
+                    atendidos_ahora += 1
+                    print(f"✅ Atendido: {cliente.nombre}")
+                    escritorio.ultimo_cliente = None
+
+        if atendidos_ahora == 0:
+            print("⚠️  No se atendió a ningún cliente.")
+
 
     def estadisticas(self):
         tiempos_espera = [c.tiempo_espera for c in self.clientes_atendidos.recorrer()]
@@ -59,6 +74,12 @@ class PuntoAtencion:
             "espera": resumen(tiempos_espera),
             "atencion": resumen(tiempos_atencion)
         }
+
+    def obtener_siguiente_inactivo(self):
+        for escritorio in self.escritorios.recorrer_adelante():
+            if not escritorio.activo:
+                return escritorio
+        return None
 
     def __str__(self):
         return f"{self.nombre} ({self.direccion})"

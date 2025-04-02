@@ -58,6 +58,9 @@ class LectorXML:
 
     @staticmethod
     def cargar_inicial(ruta, lista_empresas):
+        import xml.etree.ElementTree as ET
+        from modelos.cliente import Cliente
+
         try:
             tree = ET.parse(ruta)
             root = tree.getroot()
@@ -67,16 +70,16 @@ class LectorXML:
                 id_punto = conf.get("idPunto")
 
                 empresa = lista_empresas.buscar(lambda e: e.id == id_empresa)
-                if empresa is None:
+                if not empresa:
                     continue
 
                 punto = empresa.obtener_punto(id_punto)
-                if punto is None:
+                if not punto:
                     continue
 
                 # Activar escritorios
-                for es_activo in conf.find("escritoriosActivos").findall("escritorio"):
-                    id_escritorio = es_activo.get("idEscritorio")
+                for e_activo in conf.find("escritoriosActivos").findall("escritorio"):
+                    id_escritorio = e_activo.get("idEscritorio")
                     escritorio = punto.escritorios.buscar(lambda e: e.id == id_escritorio)
                     if escritorio:
                         escritorio.activar()
@@ -95,8 +98,9 @@ class LectorXML:
                         if transaccion:
                             cliente.agregar_transaccion(transaccion, cantidad)
 
-                    punto.agregar_cliente(cliente)
+                    punto.agregar_cliente(cliente)  # 👈 se agrega correctamente a la cola
 
             print("Archivo de inicio cargado correctamente.")
         except Exception as e:
             print(f"Error al cargar archivo de inicio: {e}")
+

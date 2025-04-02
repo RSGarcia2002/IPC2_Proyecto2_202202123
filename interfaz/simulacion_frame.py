@@ -1,5 +1,3 @@
-# interfaz/simulacion_frame.py
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 
@@ -22,11 +20,13 @@ class FrameSimulacion(tk.Frame):
         tk.Label(self, text="Punto de atención:").pack()
         self.combo_punto = ttk.Combobox(self, state="readonly")
         self.combo_punto.pack()
-        self.combo_punto.bind("<<ComboboxSelected>>", self.cargar_escritorios)
 
-        # Lista de escritorios
-        self.frame_escritorios = tk.Frame(self)
-        self.frame_escritorios.pack(pady=10)
+        # Botones para pila de escritorios
+        btn_activar = tk.Button(self, text="Activar Escritorio", command=self.activar_escritorio)
+        btn_activar.pack(pady=5)
+
+        btn_desactivar = tk.Button(self, text="Desactivar Escritorio", command=self.desactivar_escritorio)
+        btn_desactivar.pack(pady=5)
 
         # Botones de acción
         btn_atender = tk.Button(self, text="Atender Siguiente Cliente(s)", command=self.atender)
@@ -60,51 +60,82 @@ class FrameSimulacion(tk.Frame):
             self.puntos_dict = {p.nombre: p for p in puntos}
             self.combo_punto.set("")
 
-    def cargar_escritorios(self, event=None):
-        for widget in self.frame_escritorios.winfo_children():
-            widget.destroy()
-
-        punto = self._get_punto_actual()
-        if not punto:
-            return
-
-        self.botones_escritorios = []
-
-        for escritorio in punto.escritorios.recorrer_adelante():
-            estado = "Activo" if escritorio.activo else "Inactivo"
-            texto_btn = f"{escritorio.identificacion} ({estado})"
-
-            boton = tk.Button(self.frame_escritorios, text=texto_btn, width=40)
-            boton.config(command=lambda e=escritorio, b=boton: self.toggle_escritorio(e, b))
-            boton.pack(pady=2)
-            self.botones_escritorios.append(boton)
-
-    def toggle_escritorio(self, escritorio, boton):
-        if escritorio.activo:
-            escritorio.desactivar()
-        else:
-            escritorio.activar()
-        estado = "Activo" if escritorio.activo else "Inactivo"
-        boton.config(text=f"{escritorio.identificacion} ({estado})")
-
-    def atender(self):
-        punto = self._get_punto_actual()
-        if punto:
-            punto.atender()
-            self.label_estado.config(text="Atención ejecutada.")
-            self.cargar_escritorios()
-
-    def simular(self):
-        punto = self._get_punto_actual()
-        if punto:
-            while punto.cola_espera.tamano() > 0:
-                punto.atender()
-            self.label_estado.config(text="Simulación completa.")
-            self.cargar_escritorios()
+    def _get_empresa_actual(self):
+        nombre = self.combo_empresa.get()
+        return self.empresas_dict.get(nombre)
 
     def _get_punto_actual(self):
         nombre_punto = self.combo_punto.get()
         return self.puntos_dict.get(nombre_punto)
+
+    def activar_escritorio(self):
+        punto = self._get_punto_actual()
+        if not punto:
+            messagebox.showerror("Error", "Selecciona un punto de atención.")
+            return
+
+        escritorio = punto.obtener_siguiente_inactivo()
+        if escritorio:
+            escritorio.activar()
+            self.label_estado.config(text=f"Escritorio {escritorio.identificacion} activado.")
+        else:
+            self.label_estado.config(text="No hay escritorios inactivos disponibles.")
+        
+        self.cargar_escritorios()
+
+
+    def desactivar_escritorio(self):
+        punto = self._get_punto_actual()
+        if not punto:
+            messagebox.showerror("Error", "Selecciona un punto de atención.")
+            return
+
+        pila = []
+        for esc in punto.escritorios.recorrer_adelante():
+            if esc.activo:
+                pila.append(esc)
+
+        if pila:
+            ultimo = pila[-1]  # LIFO
+            ultimo.desactivar()
+            self.label_estado.config(text=f"Escritorio {ultimo.identificacion} desactivado.")
+        else:
+            self.label_estado.config(text="No hay escritorios activos para desactivar.")
+        
+        self.cargar_escritorios()
+
+    def atender(self):
+        punto = self._get_punto_actual()
+        if not punto:
+            return
+
+        antes = punto.cola_espera.tamano()
+        punto.atender()
+        despues = punto.cola_espera.tamano()
+        atendidos = antes - despues
+
+        if atendidos > 0:
+            self.label_estado.config(text=f"Se atendieron {atendidos} cliente(s).")
+        else:
+            self.label_estado.config(text="No hay clientes disponibles para atender.")
+
+        self.cargar_escritorios()
+
+    def simular(self):
+        punto = self._get_punto_actual()
+        if punto:
+            ciclos = 0
+            while not punto.cola_espera.esta_vacia():
+                punto.atender()
+                ciclos += 1
+
+            # Asegurarnos de vaciar escritorios que aún tengan clientes
+            for _ in range(10):
+                punto.atender()
+
+            self.label_estado.config(text=f"Simulación completa en {ciclos} ciclo(s).")
+            self.cargar_escritorios()
+
 
     def graficar_cola(self):
         from visualizador_grafico import VisualizadorGrafico
@@ -119,3 +150,14 @@ class FrameSimulacion(tk.Frame):
         if punto:
             VisualizadorGrafico.graficar_escritorios(punto)
             self.label_estado.config(text="Escritorios graficados.")
+
+    def cargar_escritorios(self):
+        punto = self._get_punto_actual()
+        if not punto:
+            return
+
+        print("Estado de los escritorios:")
+        for esc in punto.escritorios.recorrer_adelante():
+            estado = "Activo" if esc.activo else "Inactivo"
+            print(f"  {esc.identificacion} - {estado}")
+

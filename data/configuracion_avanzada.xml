@@ -1,40 +1,39 @@
 <?xml version="1.0"?>
 <listaEmpresas>
-  <empresa id="E1">
-    <nombre>Empresa Avanzada</nombre>
-    <abreviatura>EA</abreviatura>
+  <empresa id="EMP1">
+    <nombre>Banco Ejemplo</nombre>
+    <abreviatura>BE</abreviatura>
+    
     <listaPuntosAtencion>
-      <puntoAtencion id="P1">
-        <nombre>Central</nombre>
-        <direccion>Avenida Principal 123</direccion>
+      <puntoAtencion id="PA1">
+        <nombre>Agencia Central</nombre>
+        <direccion>6a Av. Zona 1</direccion>
+        
         <listaEscritorios>
-          <escritorio id="ES1">
-            <identificacion>ESCR-01</identificacion>
-            <encargado>Luis Díaz</encargado>
+          <escritorio id="E1">
+            <identificacion>Escritorio 1</identificacion>
+            <encargado>Juan Pérez</encargado>
           </escritorio>
-          <escritorio id="ES2">
-            <identificacion>ESCR-02</identificacion>
-            <encargado>Andrea Flores</encargado>
-          </escritorio>
-          <escritorio id="ES3">
-            <identificacion>ESCR-03</identificacion>
-            <encargado>Pedro Martínez</encargado>
+          <escritorio id="E2">
+            <identificacion>Escritorio 2</identificacion>
+            <encargado>Luisa Gómez</encargado>
           </escritorio>
         </listaEscritorios>
       </puntoAtencion>
     </listaPuntosAtencion>
+
     <listaTransacciones>
       <transaccion id="T1">
-        <nombre>Pago de servicio</nombre>
-        <tiempoAtencion>3</tiempoAtencion>
+        <nombre>Apertura de cuenta</nombre>
+        <tiempoAtencion>10</tiempoAtencion>
       </transaccion>
       <transaccion id="T2">
-        <nombre>Actualización de datos</nombre>
-        <tiempoAtencion>4</tiempoAtencion>
+        <nombre>Solicitud de tarjeta</nombre>
+        <tiempoAtencion>8</tiempoAtencion>
       </transaccion>
       <transaccion id="T3">
-        <nombre>Consulta de saldo</nombre>
-        <tiempoAtencion>2</tiempoAtencion>
+        <nombre>Actualización de datos</nombre>
+        <tiempoAtencion>5</tiempoAtencion>
       </transaccion>
     </listaTransacciones>
   </empresa>

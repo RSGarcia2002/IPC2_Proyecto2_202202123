@@ -1,5 +1,3 @@
-# modelos/empresa.py
-
 from estructuras.lista_simple import ListaSimple
 from modelos.transaccion import Transaccion
 
@@ -13,9 +11,15 @@ class Empresa:
         self.transacciones = ListaSimple()
 
     def agregar_punto(self, punto):
+        existente = self.puntos.buscar(lambda p: p.id == punto.id)
+        if existente:
+            raise ValueError(f"Ya existe un punto de atención con el ID '{punto.id}'")
         self.puntos.agregar(punto)
 
     def agregar_transaccion(self, transaccion):
+        existente = self.transacciones.buscar(lambda t: t.id == transaccion.id)
+        if existente:
+            raise ValueError(f"Ya existe una transacción con el ID '{transaccion.id}'")
         self.transacciones.agregar(transaccion)
 
     def obtener_transaccion(self, id_transaccion):

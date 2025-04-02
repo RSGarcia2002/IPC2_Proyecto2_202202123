@@ -1,5 +1,3 @@
-# interfaz/solicitud_frame.py
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 from modelos.cliente import Cliente
@@ -9,25 +7,21 @@ class FrameSolicitud(tk.Frame):
         super().__init__(master)
         self.master = master
         self.lista_empresas = master.lista_empresas
-        self.transacciones_seleccionadas = []
         self._crear_componentes()
 
     def _crear_componentes(self):
         tk.Label(self, text="Solicitud de Atención", font=("Arial", 16)).pack(pady=10)
 
-        # Selección de empresa
         tk.Label(self, text="Empresa:").pack()
         self.combo_empresa = ttk.Combobox(self, state="readonly")
         self.combo_empresa.pack()
         self.combo_empresa.bind("<<ComboboxSelected>>", self.cargar_puntos)
 
-        # Selección de punto
         tk.Label(self, text="Punto de atención:").pack()
         self.combo_punto = ttk.Combobox(self, state="readonly")
         self.combo_punto.pack()
         self.combo_punto.bind("<<ComboboxSelected>>", self.cargar_transacciones)
 
-        # Área para ingresar DPI y nombre
         tk.Label(self, text="DPI del cliente:").pack()
         self.entry_dpi = tk.Entry(self)
         self.entry_dpi.pack()
@@ -36,15 +30,28 @@ class FrameSolicitud(tk.Frame):
         self.entry_nombre = tk.Entry(self)
         self.entry_nombre.pack()
 
-        # Área para mostrar transacciones
-        self.frame_transacciones = tk.Frame(self)
-        self.frame_transacciones.pack(pady=10)
+        # Área scrollable para transacciones
+        frame_scroll = tk.Frame(self)
+        frame_scroll.pack(pady=10, fill="both", expand=True)
 
-        # Botón para generar solicitud
+        self.canvas = tk.Canvas(frame_scroll, height=200)
+        self.canvas.pack(side="left", fill="both", expand=True)
+
+        scrollbar = ttk.Scrollbar(frame_scroll, orient="vertical", command=self.canvas.yview)
+        scrollbar.pack(side="right", fill="y")
+
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+        self.canvas.bind('<Configure>', lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+
+        self.inner_frame = tk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.inner_frame, anchor="nw")
+
+        self.transacciones_widgets = []
+
         btn_enviar = tk.Button(self, text="Solicitar Atención", command=self.enviar_solicitud)
         btn_enviar.pack(pady=10)
 
-        self.label_resultado = tk.Label(self, text="", font=("Arial", 12), fg="blue")
+        self.label_resultado = tk.Label(self, text="", font=("Arial", 12), fg="blue", wraplength=500, justify="center")
         self.label_resultado.pack()
 
         self.cargar_empresas()
@@ -64,9 +71,9 @@ class FrameSolicitud(tk.Frame):
             self.combo_punto.set("")
 
     def cargar_transacciones(self, event=None):
-        # Limpiar frame
-        for widget in self.frame_transacciones.winfo_children():
+        for widget in self.inner_frame.winfo_children():
             widget.destroy()
+        self.transacciones_widgets.clear()
 
         nombre_empresa = self.combo_empresa.get()
         empresa = self.empresas_dict.get(nombre_empresa)
@@ -74,14 +81,16 @@ class FrameSolicitud(tk.Frame):
             return
 
         transacciones = empresa.transacciones.recorrer()
-        self.transacciones_vars = []
 
         for t in transacciones:
             var = tk.IntVar()
-            entry = tk.Entry(self.frame_transacciones, width=5)
-            tk.Checkbutton(self.frame_transacciones, text=t.nombre, variable=var).pack(anchor="w")
-            entry.pack(anchor="w", padx=30)
-            self.transacciones_vars.append((t, var, entry))
+            chk = tk.Checkbutton(self.inner_frame, text=t.nombre, variable=var)
+            chk.grid(sticky="w", padx=5, pady=2)
+
+            entry = tk.Entry(self.inner_frame, width=5)
+            entry.grid(row=self.inner_frame.grid_size()[1] - 1, column=1, padx=5)
+
+            self.transacciones_widgets.append((t, var, entry))
 
     def enviar_solicitud(self):
         nombre = self.entry_nombre.get().strip()
@@ -96,7 +105,7 @@ class FrameSolicitud(tk.Frame):
         cliente = Cliente(dpi, nombre)
         total = 0
 
-        for trans, var, entry in self.transacciones_vars:
+        for trans, var, entry in self.transacciones_widgets:
             if var.get():
                 try:
                     cantidad = int(entry.get())

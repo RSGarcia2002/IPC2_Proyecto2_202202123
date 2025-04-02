@@ -1,27 +1,41 @@
-# visualizador_grafico.py
-
 from graphviz import Digraph
 import os
 
 class VisualizadorGrafico:
-
     @staticmethod
-    def graficar_cola(punto, nombre_archivo="cola_espera"):
-        dot = Digraph(comment='Cola de Espera')
+    def graficar_cola(punto):
+        import graphviz
+
+        if punto.cola_espera.esta_vacia():
+            print("⚠️ La cola de espera está vacía.")
+            return
+
+        dot = graphviz.Digraph(format='png')
         dot.attr(rankdir='LR')
 
-        clientes = punto.cola_espera.recorrer()
+        index = 0
+        actual = punto.cola_espera.frente
 
-        for i, cliente in enumerate(clientes):
-            etiqueta = f"{cliente.nombre}\nDPI: {cliente.dpi}"
-            dot.node(str(i), etiqueta)
+        while actual:
+            cliente = actual.dato  # ✅ Cambiado de .valor a .dato
+            label = f"{cliente.nombre}\nDPI: {cliente.dpi}"
 
-        for i in range(len(clientes) - 1):
-            dot.edge(str(i), str(i + 1))
+            # Marcar verde si ya fue atendido
+            atendido = any(c.dpi == cliente.dpi for c in punto.clientes_atendidos.recorrer())
 
-        ruta = f"reportes/{nombre_archivo}"
-        dot.render(ruta, format='png', cleanup=True)
-        print(f"Cola graficada en {ruta}.png")
+            if atendido:
+                dot.node(f"C{index}", label=label, style="filled", fillcolor="palegreen")
+            else:
+                dot.node(f"C{index}", label=label)
+
+            if index > 0:
+                dot.edge(f"C{index-1}", f"C{index}")
+            index += 1
+            actual = actual.siguiente
+
+        os.makedirs("reportes", exist_ok=True)
+        dot.render("reportes/cola_espera", view=True)
+        print("✅ Cola de espera graficada correctamente.")
 
     @staticmethod
     def graficar_escritorios(punto, nombre_archivo="escritorios"):
@@ -33,12 +47,13 @@ class VisualizadorGrafico:
         for i, esc in enumerate(escritorios):
             estado = "Activo" if esc.activo else "Inactivo"
             etiqueta = f"{esc.identificacion}\n{esc.encargado}\n{estado}"
-            color = "green" if esc.activo else "red"
+            color = "palegreen" if esc.activo else "lightcoral"
             dot.node(str(i), etiqueta, style="filled", fillcolor=color)
 
         for i in range(len(escritorios) - 1):
             dot.edge(str(i), str(i + 1))
 
+        os.makedirs("reportes", exist_ok=True)
         ruta = f"reportes/{nombre_archivo}"
         dot.render(ruta, format='png', cleanup=True)
-        print(f"Escritorios graficados en {ruta}.png")
+        print(f"✅ Escritorios graficados en {ruta}.png")
