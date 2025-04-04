@@ -60,5 +60,5 @@ class ListaSimple:
     
     def vaciar(self):
         self.primero = None
-        self._tamano = 0
+        self._size = 0
 

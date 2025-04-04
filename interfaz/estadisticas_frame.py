@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 class FrameEstadisticas(tk.Frame):
     def __init__(self, master):
@@ -23,8 +23,24 @@ class FrameEstadisticas(tk.Frame):
         btn_actualizar = tk.Button(self, text="Actualizar Estadísticas", command=self.mostrar_estadisticas)
         btn_actualizar.pack(pady=5)
 
-        self.texto = tk.Text(self, width=90, height=20)
-        self.texto.pack(pady=10)
+        # 🎯 SCROLLABLE FRAME PARA ESTADÍSTICAS
+        frame_scroll = tk.Frame(self)
+        frame_scroll.pack(fill="both", expand=True, padx=10, pady=10)
+
+        self.canvas = tk.Canvas(frame_scroll, height=300)
+        self.canvas.pack(side="left", fill="both", expand=True)
+
+        scrollbar = ttk.Scrollbar(frame_scroll, orient="vertical", command=self.canvas.yview)
+        scrollbar.pack(side="right", fill="y")
+
+        self.scrollable_frame = tk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+
+        self.scrollable_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+
+        self.texto = tk.Text(self.scrollable_frame, width=90, height=20)
+        self.texto.pack()
 
         btn_reporte = tk.Button(self, text="Generar Reporte HTML", command=self.generar_html)
         btn_reporte.pack(pady=5)
@@ -78,7 +94,6 @@ class FrameEstadisticas(tk.Frame):
             self.texto.insert(tk.END, f"     ▪ Promedio: {round(esc.promedio_atencion(), 2)} min\n")
             self.texto.insert(tk.END, f"     ▪ Máximo:   {esc.max_tiempo} min\n")
             self.texto.insert(tk.END, f"     ▪ Mínimo:   {esc.min_tiempo} min\n\n")
-
 
     def generar_html(self):
         from reportes.reportes_html import ReporteHTML

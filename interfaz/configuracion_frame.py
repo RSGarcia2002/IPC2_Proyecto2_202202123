@@ -141,7 +141,8 @@ class FrameConfiguracion(tk.Frame):
             self.actualizar_combo_empresas()
 
     def limpiar_sistema(self):
-        self.lista_empresas.vaciar()
+        self.lista_empresas = ListaSimple()
+        self.master.lista_empresas = self.lista_empresas
         self.label_estado.config(text="Sistema limpiado.")
         messagebox.showinfo("Limpieza completada", "El sistema ha sido reiniciado correctamente.")
         self.actualizar_combo_empresas()
@@ -161,7 +162,7 @@ class FrameConfiguracion(tk.Frame):
                 return
 
         nueva = Empresa(id_, nombre, abrev)
-        self.lista_empresas.agregar_final(nueva)
+        self.lista_empresas.agregar(nueva)
         messagebox.showinfo("Éxito", f"Empresa '{nombre}' creada correctamente.")
         self.label_estado.config(text=f"Empresa '{nombre}' registrada.")
         self.entry_id.delete(0, tk.END)
@@ -233,6 +234,10 @@ class FrameConfiguracion(tk.Frame):
         id_trans = self.entry_id_trans.get().strip()
         nombre = self.entry_nombre_trans.get().strip()
         tiempo_str = self.entry_tiempo_trans.get().strip()
+        
+        if empresa.transacciones.buscar(lambda t: t.id == id_trans):
+            messagebox.showwarning("Duplicado", f"Ya existe una transacción con ID '{id_trans}' en la empresa.")
+            return
 
         if not (nombre_empresa and id_trans and nombre and tiempo_str):
             messagebox.showerror("Error", "Completa todos los campos de la transacción.")

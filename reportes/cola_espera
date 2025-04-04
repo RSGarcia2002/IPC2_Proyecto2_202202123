@@ -1,5 +1,17 @@
 digraph {
 	rankdir=LR
-	C0 [label="Henry Ford
+	C0 [label="Arturito
+DPI: 2933151161111"]
+	C1 [label="Bill Gates
+DPI: 2933151162222"]
+	C0 -> C1
+	C2 [label="Dante
+DPI: 2933151163333"]
+	C1 -> C2
+	C3 [label="Freddie Mercuri
+DPI: 2933151164444"]
+	C2 -> C3
+	C4 [label="Henry Ford
 DPI: 29331511655555"]
+	C3 -> C4
 }
