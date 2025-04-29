@@ -23,6 +23,15 @@ class Cola:
             self.final = nuevo
         self._size += 1
 
+    def encolar_prioridad(self, dato):
+        nuevo = Nodo(dato)
+        if self.esta_vacia():
+            self.frente = self.final = nuevo
+        else:
+            nuevo.siguiente = self.frente
+            self.frente = nuevo
+        self._size += 1
+
     def desencolar(self):
         if self.esta_vacia():
             return None

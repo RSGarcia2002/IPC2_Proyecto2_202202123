@@ -1,5 +1,3 @@
-# lector_xml.py
-
 import xml.etree.ElementTree as ET
 from modelos.empresa import Empresa
 from modelos.punto_atencion import PuntoAtencion
@@ -98,9 +96,20 @@ class LectorXML:
                         if transaccion:
                             cliente.agregar_transaccion(transaccion, cantidad)
 
-                    punto.agregar_cliente(cliente)  # 👈 se agrega correctamente a la cola
-
+                    if c.get("prioridad") == "si":
+                        punto.agregar_cliente_prioridad(cliente)
+                    else:
+                        punto.agregar_cliente(cliente)
+            
             print("Archivo de inicio cargado correctamente.")
+
+            print("\n🧾 Estado de la cola de espera:")
+            temp = punto.cola_espera.frente
+            i = 1
+            while temp:
+                cliente = temp.dato
+                print(f"{i}. {cliente.nombre} (DPI: {cliente.dpi})")
+                temp = temp.siguiente
+                i += 1
         except Exception as e:
             print(f"Error al cargar archivo de inicio: {e}")
-

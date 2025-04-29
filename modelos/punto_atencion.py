@@ -18,6 +18,9 @@ class PuntoAtencion:
     def agregar_cliente(self, cliente):
         self.cola_espera.encolar(cliente)
 
+    def agregar_cliente_prioridad(self, cliente):
+        self.cola_espera.encolar_prioridad(cliente)
+
     def atender(self):
         atendidos = []
         for escritorio in self.escritorios.recorrer_adelante():
